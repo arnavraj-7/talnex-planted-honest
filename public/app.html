@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TinyTools: your tools</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main id="app" hidden>
+    <h1>Your tools</h1>
+
+    <section aria-labelledby="converter-title">
+      <h2 id="converter-title">Currency converter</h2>
+      <form id="converter">
+        <label for="amount">Amount</label>
+        <input id="amount" name="amount" type="text" inputmode="decimal" autocomplete="off">
+        <label for="from">From</label>
+        <select id="from" name="from"><option>USD</option><option>EUR</option><option>GBP</option><option>INR</option></select>
+        <label for="to">To</label>
+        <select id="to" name="to"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option></select>
+        <button type="submit">Convert</button>
+      </form>
+      <p id="result" role="status"></p>
+      <p id="convert-error" class="error" role="alert"></p>
+    </section>
+
+    <section aria-labelledby="todo-title">
+      <h2 id="todo-title">Todo list</h2>
+      <form id="todo-form">
+        <label for="todo-text">New todo</label>
+        <input id="todo-text" name="todo" type="text" placeholder="What needs doing?" autocomplete="off" maxlength="200">
+        <button type="submit">Add</button>
+      </form>
+      <p id="todo-error" class="error" role="alert"></p>
+      <ul id="todo-list"></ul>
+      <p id="todo-count" role="status"></p>
+    </section>
+  </main>
+
+  <script>
+    // Only people with a guest session may see the tools.
+    fetch("/api/me").then((reply) => {
+      if (!reply.ok) { window.location.replace("/"); return; }
+      document.getElementById("app").hidden = false;
+    }).catch(() => window.location.replace("/"));
+
+    // ---- Currency converter ----
+    const converter = document.getElementById("converter");
+    converter.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const result = document.getElementById("result");
+      const error = document.getElementById("convert-error");
+      result.textContent = ""; error.textContent = "";
+      const params = new URLSearchParams({
+        amount: document.getElementById("amount").value,
+        from: document.getElementById("from").value,
+        to: document.getElementById("to").value,
+      });
+      try {
+        const reply = await fetch("/api/convert?" + params);
+        const data = await reply.json();
+        if (!reply.ok) { error.textContent = data.error; return; }
+        const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        result.textContent = `${fmt(data.amount)} ${data.from} = ${fmt(data.result)} ${data.to}`;
+      } catch (e) {
+        error.textContent = "Something went wrong. Please try again.";
+      }
+    });
+
+    // ---- Todo list (kept in this browser, so it is still there after a reload) ----
+    const KEY = "tinytools.todos";
+    let todos = [];
+    try { todos = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { todos = []; }
+    const list = document.getElementById("todo-list");
+
+    function save() { localStorage.setItem(KEY, JSON.stringify(todos)); }
+
+    function render() {
+      list.innerHTML = "";
+      todos.forEach((todo, index) => {
+        const item = document.createElement("li");
+        const box = document.createElement("input");
+        box.type = "checkbox"; box.checked = todo.done; box.setAttribute("aria-label", "Done: " + todo.text);
+        box.addEventListener("change", () => { todo.done = box.checked; save(); render(); });
+        const label = document.createElement("span");
+        label.textContent = todo.text;
+        if (todo.done) label.className = "done";
+        const remove = document.createElement("button");
+        remove.type = "button"; remove.textContent = "Delete"; remove.setAttribute("aria-label", "Delete " + todo.text);
+        remove.addEventListener("click", () => { todos.splice(index, 1); save(); render(); });
+        item.append(box, label, remove);
+        list.append(item);
+      });
+      const left = todos.filter((t) => !t.done).length;
+      document.getElementById("todo-count").textContent = `${left} ${left === 1 ? "item" : "items"} left`;
+    }
+
+    document.getElementById("todo-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = document.getElementById("todo-text");
+      const error = document.getElementById("todo-error");
+      const text = input.value.trim();
+      error.textContent = "";
+      if (!text) { error.textContent = "Please type something to add."; return; }
+      todos.push({ text, done: false });
+      save(); render();
+      input.value = "";
+    });
+
+    render();
+  </script>
+</body>
+</html>

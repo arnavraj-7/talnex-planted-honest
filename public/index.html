@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TinyTools</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <h1>TinyTools</h1>
+    <p>Small tools for everyday jobs: convert money and keep a todo list. No account needed.</p>
+    <button id="guest" type="button">Continue as guest</button>
+    <p id="message" role="status"></p>
+  </main>
+  <script>
+    document.getElementById("guest").addEventListener("click", async () => {
+      const message = document.getElementById("message");
+      message.textContent = "One moment…";
+      try {
+        const reply = await fetch("/api/guest", { method: "POST" });
+        if (!reply.ok) throw new Error("failed");
+        window.location.href = "/app.html";
+      } catch (e) {
+        message.textContent = "Could not start a guest session. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>

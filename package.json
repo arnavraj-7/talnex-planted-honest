@@ -1,0 +1,9 @@
+{
+  "name": "talnex-honest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A planted test app for TalNex: everything it claims works.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,11 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f7f7f2; color: #222; }
+main { max-width: 36rem; margin: 2rem auto; padding: 0 1rem; }
+section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+label { display: block; margin-top: .6rem; font-weight: 600; }
+input[type="text"], select { width: 100%; padding: .5rem; margin-top: .25rem; box-sizing: border-box; }
+button { margin-top: .75rem; padding: .5rem 1rem; cursor: pointer; }
+ul { padding-left: 0; list-style: none; }
+li { display: flex; align-items: center; gap: .6rem; padding: .35rem 0; }
+li span { flex: 1; }
+.done { text-decoration: line-through; color: #777; }
+.error { color: #b00020; min-height: 1.2em; }
