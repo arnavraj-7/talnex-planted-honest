@@ -1,11 +1,123 @@
-body { font-family: system-ui, sans-serif; margin: 0; background: #f7f7f2; color: #222; }
-main { max-width: 36rem; margin: 2rem auto; padding: 0 1rem; }
-section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0; }
-label { display: block; margin-top: .6rem; font-weight: 600; }
-input[type="text"], select { width: 100%; padding: .5rem; margin-top: .25rem; box-sizing: border-box; }
-button { margin-top: .75rem; padding: .5rem 1rem; cursor: pointer; }
-ul { padding-left: 0; list-style: none; }
-li { display: flex; align-items: center; gap: .6rem; padding: .35rem 0; }
-li span { flex: 1; }
-.done { text-decoration: line-through; color: #777; }
-.error { color: #b00020; min-height: 1.2em; }
+:root {
+  --bg: #f4f5fb;
+  --card: #ffffff;
+  --ink: #1b1e2e;
+  --muted: #5d6280;
+  --line: #e1e4f0;
+  --accent: #4f46e5;
+  --accent-dark: #3f37c9;
+  --accent-soft: #eef0ff;
+  --danger: #c0283d;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font: 16px/1.55 "Inter", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 0%, #e3e6ff 0, transparent 40%),
+    radial-gradient(circle at 100% 30%, #fde9f1 0, transparent 35%),
+    var(--bg);
+}
+
+main { max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+
+h1 {
+  margin: 0 0 .5rem;
+  font: 700 2.4rem/1.1 "Space Grotesk", system-ui, sans-serif;
+  letter-spacing: -.02em;
+}
+h1::before {
+  content: "";
+  display: inline-block;
+  width: .7em; height: .7em;
+  margin-right: .35em;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), #db2777);
+  vertical-align: .02em;
+}
+h2 { margin: 0 0 .75rem; font: 600 1.25rem "Space Grotesk", system-ui, sans-serif; }
+main > p { color: var(--muted); font-size: 1.05rem; max-width: 34rem; }
+
+section {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 1px 2px rgba(27, 30, 46, .04), 0 8px 24px rgba(27, 30, 46, .06);
+}
+
+label { display: block; margin-top: .8rem; font-size: .85rem; font-weight: 600; color: var(--muted); }
+input[type="text"], select {
+  width: 100%;
+  margin-top: .3rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: inherit;
+  color: var(--ink);
+  background: #fafbff;
+  transition: border-color .15s, box-shadow .15s;
+}
+input[type="text"]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  background: #fff;
+}
+
+button {
+  margin-top: 1rem;
+  padding: .65rem 1.3rem;
+  border: 0;
+  border-radius: 10px;
+  font: 600 .95rem "Inter", system-ui, sans-serif;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+  transition: background .15s, transform .05s;
+}
+button:hover { background: var(--accent-dark); }
+button:active { transform: translateY(1px); }
+#guest { padding: .85rem 1.6rem; font-size: 1rem; box-shadow: 0 6px 18px rgba(79, 70, 229, .3); }
+
+#result:not(:empty) {
+  margin: 1rem 0 0;
+  padding: .75rem 1rem;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  font-weight: 600;
+  color: var(--accent-dark);
+}
+#todo-count { margin: .75rem 0 0; font-size: .9rem; color: var(--muted); }
+
+ul { margin: .5rem 0 0; padding-left: 0; list-style: none; }
+li {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+li:last-child { border-bottom: 0; }
+li span { flex: 1; word-break: break-word; }
+li input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
+li button {
+  margin: 0;
+  padding: .35rem .75rem;
+  font-size: .85rem;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid #f2c9cf;
+}
+li button:hover { background: #fdf0f2; }
+
+.done { text-decoration: line-through; color: #9a9db3; }
+.error { color: var(--danger); min-height: 1.2em; margin: .5rem 0 0; font-size: .9rem; }
+#message { color: var(--muted); }
